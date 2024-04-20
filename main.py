@@ -20,8 +20,10 @@ chat_id = ''
 
 def kb_menu():
     buttons = [
-        [KeyboardButton(text='Расписание', callback_data= "scheduler")], 
-        [KeyboardButton(text='Выбор курса', callback_data= "course")]
+        [KeyboardButton(text='Расписание📅', callback_data= "scheduler"), 
+        KeyboardButton(text='Выбор курса📎', callback_data= "course"),
+        KeyboardButton(text='Зачетная книжка📂', callback_data="Зачетная книжка")],
+        [KeyboardButton(text='Авторизация👤', callback_data='Авторизация')]
     ]
 
     keyboard = types.ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
@@ -29,10 +31,10 @@ def kb_menu():
 
 def kb_course():
     buttons = [
-        [types.KeyboardButton(text="1 курс")],
-        [types.KeyboardButton(text="2 курс")],
-        [types.KeyboardButton(text="3 курс")],
-        [types.KeyboardButton(text="4 курс")]
+        [types.KeyboardButton(text="1 курс"),
+        types.KeyboardButton(text="2 курс")],
+        [types.KeyboardButton(text="3 курс"),
+        types.KeyboardButton(text="4 курс")]
     ]
 
     keyboard = types.ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
@@ -92,7 +94,7 @@ async def start(message: types.Message):
 
 @dp.message(F.text == 'Авторизация')
 async def kn(message):
-    await bot.send_message(message.chat.id, f'Введите логин и пароль! \n Образец: \n Логин:пароль')
+    await bot.send_message(message.chat.id, f'Введите логин и пароль! \n\nОбразец: \nЛогин:пароль')
 
 @dp.message(F.text.lower()[3:6] == 'dot' )
 async def logpass(message):
@@ -106,8 +108,12 @@ async def grades(message:types.Message):
     if univer(course).check_user_id_to_parsing(chat_id) is False:
         await message.answer('Для начала авторизуйтесь!')
     else:
-        response = univer(course).parsing(univer(course).check_user_id_to_parsing(chat_id))
-        await message.answer(response, reply_markup= kb_menu())
+        try:
+            response = univer(course).parsing(univer(course).check_user_id_to_parsing(chat_id))
+            await message.answer(response, reply_markup= kb_menu())
+        except Exception as e:
+            await message.answer(f'Произошла ошибка: {e}', reply_markup= kb_menu())
+
 
 async def main():
     await dp.start_polling(bot)

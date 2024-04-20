@@ -37,7 +37,7 @@ class univer:
     def __setup(self):
         o = Options()
         o.add_experimental_option("detach", True)
-        self.driver = webdriver.Chrome(options=o)
+        self.driver = webdriver.Chrome()
 
     def __login(self, username, password):
         self.driver.get(url)
