@@ -20,10 +20,10 @@ chat_id = ''
 
 def kb_menu():
     buttons = [
-        [KeyboardButton(text='Расписание📅', callback_data= "scheduler"), 
-        KeyboardButton(text='Выбор курса📎', callback_data= "course"),
-        KeyboardButton(text='Зачетная книжка📂', callback_data="Зачетная книжка")],
-        [KeyboardButton(text='Авторизация👤', callback_data='Авторизация')]
+        [KeyboardButton(text='Расписание📅'), 
+        KeyboardButton(text='Выбор курса📎'),
+        KeyboardButton(text='Зачетная книжка📂')],
+        [KeyboardButton(text='Авторизация👤')]
     ]
 
     keyboard = types.ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
@@ -49,7 +49,7 @@ async def cmd_start(message: types.Message):
                         "Здесь ты можешь посмотреть свое расписание нажатием кнопки <i><b>Расписание</b></i>, выбрать свой курс кнопкой <i><b>Выбор курса</b></i>.\n\n"
                         "На данном этапе это не итоговая версия, некоторые функции будут дополняться, следите за обновлениями 🚀", reply_markup= kb_menu(), parse_mode='HTML')
 
-@dp.message(F.text == 'Выбор курса')
+@dp.message(F.text == 'Выбор курса📎')
 async def cmd_course(message: types.Message):
     await message.answer("Выбери свой курс", reply_markup=kb_course())
 
@@ -77,7 +77,7 @@ async def course4(message: types.Message):
     course = '4'
     await message.answer('Отлично, я записал!', reply_markup= kb_menu())
 
-@dp.message(F.text == 'Расписание')
+@dp.message(F.text == 'Расписание📅')
 async def cmd_sheduler(message: types.Message):
     global course
     if course != '':
@@ -92,7 +92,7 @@ async def cmd_sheduler(message: types.Message):
 async def start(message: types.Message):
     await message.answer("Ты учишься на: " + course)
 
-@dp.message(F.text == 'Авторизация')
+@dp.message(F.text == 'Авторизация👤')
 async def kn(message):
     await bot.send_message(message.chat.id, f'Введите логин и пароль! \n\nОбразец: \nЛогин:пароль')
 
@@ -102,7 +102,7 @@ async def logpass(message):
     chat_id = message.chat.id
     await bot.send_message(chat_id=chat_id, text=univer(course).database_auth(logpassw, chat_id), reply_markup= kb_menu())
 
-@dp.message(F.text == 'Зачетная книжка')
+@dp.message(F.text == 'Зачетная книжка📂')
 async def grades(message:types.Message):
     chat_id = message.chat.id
     if univer(course).check_user_id_to_parsing(chat_id) is False:
