@@ -4,18 +4,17 @@ import logging
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters.command import Command
 from aiogram.types.input_file import FSInputFile
-from aiogram.types import KeyboardButton, CallbackQuery
+from aiogram.types import KeyboardButton
 from aiogram import F
 from scripts import univer
 global course
 import json
+import secrets
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token="5927699959:AAHAltTvMZRd1pRfAULj6L6J8YQP4ch96lk")
 dp = Dispatcher()
 course = ''
-log = ''
-passw = ''
 chat_id = ''
 
 def kb_menu():

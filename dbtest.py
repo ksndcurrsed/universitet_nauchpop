@@ -1,24 +1,22 @@
-import sqlite3
+from pysqlcipher3 import dbapi2 as sqlite
 
-# Подключение к базе данных
-conn = sqlite3.connect('имя_вашей_базы_данных.sqlite')
-cur = conn.cursor()
-cur.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-        chat_id INTEGER PRIMARY KEY,
-        username TEXT NOT NULL,
-        password TEXT NOT NULL
-        )
-        ''')
+def change_database_password(db_path, current_password, new_password):
+    conn = sqlite.connect(db_path)
+    conn.execute("PRAGMA key='%s'" % current_password)
 
-# Запрос к базе данных для получения логина и пароля по chat_id
-chat_id_to_check = 123456789  # Замените на ваше chat_id
-cur.execute("SELECT username, password FROM users WHERE chat_id = ?", (chat_id_to_check,))
-result = cur.fetchone()
+    conn.execute("ATTACH DATABASE ? AS new_db KEY ?", ('temp.db', new_password))
+    conn.execute("SELECT sqlcipher_export('new_db')")
+    conn.execute("DETACH DATABASE new_db")
 
-if result:
-    username, password = result
-    print(f"Логин: {username}, Пароль: {password}")
-else:
-    print("Запись с таким chat_id не существует.")
+    conn.close()
 
+    import os
+    os.rename('temp.db', db_path)
+
+db_path = 'encrypted_database.db'
+current_password = 'current_password'
+new_password = 'new_password'
+
+change_database_password(db_path, current_password, new_password)
+
+print("Пароль базы данных успешно изменен.")
